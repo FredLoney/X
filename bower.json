@@ -1,5 +1,5 @@
 {
-  "name": "X",
+  "name": "xtk",
   "version": "10.0",
   "main": "xtk-deps.js",
   "description": "The X Toolkit: WebGL(tm) for Scientific Visualization",
@@ -13,7 +13,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com/xtk/X"
+    "url": "git://github.com/FredLoney/X.git"
   },
   "ignore": [
     "**/.*",
