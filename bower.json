@@ -1,5 +1,5 @@
 {
-  "name": "xtk",
+  "name": "X",
   "version": "10.0",
   "main": "xtk-deps.js",
   "description": "The X Toolkit: WebGL(tm) for Scientific Visualization",
