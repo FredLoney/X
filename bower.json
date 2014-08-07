@@ -11,10 +11,6 @@
     "visualization"
   ],
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "file:///Users/loneyf/workspace/xtk"
-  },
   "ignore": [
     "**/.*",
     "testing",
