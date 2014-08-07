@@ -13,7 +13,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/FredLoney/X.git"
+    "url": "file:///Users/loneyf/workspace/xtk"
   },
   "ignore": [
     "**/.*",
