@@ -12,20 +12,10 @@
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
-    "*.js",
-    "requirements.txt",
-    "core",
-    "doc",
-    "injects",
-    "io",
-    "lib",
-    "math",
-    "objects",
-    "testing",
-    "ui",
-    "utils",
-    "visualization"
+    "**/*",
+    "!bower.json",
+    "!README.md",
+    "!dist/*.js"
   ],
   "dependencies": {
   }
