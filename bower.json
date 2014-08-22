@@ -1,7 +1,7 @@
 {
   "name": "xtk",
   "version": "10.0",
-  "main": "xtk-deps.js",
+  "main": "./dist/xtk.js",
   "description": "The X Toolkit: WebGL(tm) for Scientific Visualization",
   "author": "Nicolas Rannou <huko.rannou@gmail.com>",
   "keywords": [
@@ -13,12 +13,20 @@
   "license": "MIT",
   "ignore": [
     "**/.*",
+    "*.js",
+    "requirements.txt",
+    "core",
+    "doc",
+    "injects",
+    "io",
+    "lib",
+    "math",
+    "objects",
     "testing",
-    "doc"
+    "ui",
+    "utils",
+    "visualization"
   ],
   "dependencies": {
-    "csg": "evanw/csg.js.git",
-    "google-closure-library": "google/closure-library.git",
-    "zlib": "imaya/zlib.js#0.2.0"
   }
 }

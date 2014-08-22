@@ -83,6 +83,8 @@ BUILD_OUTPUT_PATH = os.path.normpath( os.path.join( XBUILD_PATH , SOFTWARE_SHORT
 DEPS_OUTPUT_PATH = os.path.normpath( os.path.join( SOFTWARE_PATH , SOFTWARE_SHORT.lower() + '-deps.js' ) )
 DOC_OUTPUT_PATH = os.path.normpath( os.path.join( SOFTWARE_PATH , 'doc/' ) )
 
+COMPILATION_LEVEL = 'ADVANCED_OPTIMIZATIONS'
+
 UNIT_TESTS = os.path.normpath( os.sep + 'testing' + os.sep + SOFTWARE_SHORT.lower() + '_tests.html' )
 UNIT_TESTS_BUILD = os.path.normpath( os.sep + 'testing' + os.sep + SOFTWARE_SHORT.lower() + '_tests_build.html' )
 VISUAL_TESTS_BASEPATH = os.sep + 'testing' + os.sep + 'visualization' + os.sep
