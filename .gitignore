@@ -22,7 +22,7 @@ temp*
 # all build files
 *-build/*
 *-deps.js
-xtk.js
+/xtk.js
 
 # all .log files
 *.log
