@@ -1972,8 +1972,6 @@ X.renderer3D.prototype.render_ = function(picking, invoked) {
     statistics += "Lines: " + linesCounter + " | ";
     statistics += "Points: " + pointsCounter + " | ";
     statistics += "Textures: " + this._textures.getCount();
-    window.console.log(statistics);
-
   }
 
 };
@@ -1996,9 +1994,9 @@ X.renderer3D.prototype.remove = function(object) {
 		var c = 0;
 
 		for (c = 0; c < numberOfChildren; c++) {
-
-			this.remove(children[c]);
-
+      if (typeof(children[c]) != "undefined"){
+			  this.remove(children[c]);
+      }
 		}
 
 	}
@@ -2417,3 +2415,4 @@ goog.exportSymbol('X.renderer3D.prototype.resetViewAndRender',
     X.renderer3D.prototype.resetViewAndRender);
 goog.exportSymbol('X.renderer3D.prototype.pick', X.renderer3D.prototype.pick);
 goog.exportSymbol('X.renderer3D.prototype.pick3d', X.renderer3D.prototype.pick3d);
+goog.exportSymbol('X.renderer3D.prototype.afterRender', X.renderer3D.prototype.afterRender);

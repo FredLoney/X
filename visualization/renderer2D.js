@@ -201,11 +201,25 @@ X.renderer2D = function() {
    */
   this._radiological = true;
 
+  this._normalizedScale = 1;
+
 };
 // inherit from X.base
 goog.inherits(X.renderer2D, X.renderer);
 
+/**
+ * @inheritDoc
+ */
+X.renderer2D.prototype.remove = function(object) {
 
+  // call the remove_ method of the superclass
+  goog.base(this, 'remove', object);
+
+  this._objects.remove(object);
+
+  return true;
+
+};
 /**
  * Overload this function to execute code after scrolling has completed and just
  * before the next rendering call.
@@ -404,6 +418,36 @@ X.renderer2D.prototype.__defineGetter__('radiological', function() {
 
 });
 
+X.renderer2D.prototype.__defineGetter__('normalizedScale', function() {
+
+  return this._normalizedScale;
+
+});
+
+X.renderer2D.prototype.__defineGetter__('canvasWidth', function() {
+
+  return this._canvas.width;
+
+});
+
+X.renderer2D.prototype.__defineGetter__('canvasHeight', function() {
+
+  return this._canvas.height;
+
+});
+
+X.renderer2D.prototype.__defineGetter__('sliceWidth', function() {
+
+  return this._sliceWidth;
+
+});
+
+X.renderer2D.prototype.__defineGetter__('sliceHeight', function() {
+
+  return this._sliceHeight;
+
+});
+
 
 /**
  * Set the convention for this renderer. There is a difference between radiological and neurological
@@ -530,6 +574,20 @@ X.renderer2D.prototype.volumeChildrenIndex_ = function(targetOrientation) {
 };
 
 
+ /**
+ * Get the existing X.object with the given id.
+ * 
+ * @param {!X.object} object The displayable object to setup within this
+ *          renderer.
+ * @public
+ */
+ X.renderer2D.prototype.update = function(object) {
+    // update volume info
+    this.update_(object);
+    // force redraw
+    this._currentSlice = -1;
+ }
+
 /**
  * @inheritDoc
  */
@@ -621,11 +679,6 @@ X.renderer2D.prototype.update_ = function(object) {
       // still loading
       return;
 
-    } else if (existed && !object._dirty) {
-
-      // already parsed the volume
-      return;
-
     }
 
     // just continue
@@ -655,7 +708,7 @@ X.renderer2D.prototype.update_ = function(object) {
 
   // size
   this._slices = object._children[this._orientationIndex]._children;
-  
+
   var _currentSlice = null;
   if (this._orientationIndex == 0) {
 
@@ -670,13 +723,13 @@ X.renderer2D.prototype.update_ = function(object) {
     _currentSlice = object['indexZ'];
 
   }
-  
+
   var _width = object._children[this._orientationIndex]._children[_currentSlice]._iWidth;
   var _height = object._children[this._orientationIndex]._children[_currentSlice]._iHeight;
   // spacing
   this._sliceWidthSpacing = object._children[this._orientationIndex]._children[_currentSlice]._widthSpacing;
   this._sliceHeightSpacing = object._children[this._orientationIndex]._children[_currentSlice]._heightSpacing;
-  
+
   // .. and store the dimensions
   this._sliceWidth = _width;
   this._sliceHeight = _height;
@@ -786,29 +839,29 @@ X.renderer2D.prototype.xy2ijk = function(x, y) {
   var _y = -1 * _view[13]; // we need to flip y here
 
   // .. and zoom
-  var _normalizedScale = Math.max(_view[14], 0.6);
+  this._normalizedScale = Math.max(_view[14], 0.6);
   var _center = [this._width / 2, this._height / 2];
 
   // the slice dimensions in canvas coordinates
   var _sliceWidthScaled = _sliceWidth * _sliceWSpacing *
-      _normalizedScale;
+    this._normalizedScale;
   var _sliceHeightScaled = _sliceHeight * _sliceHSpacing *
-      _normalizedScale;
+    this._normalizedScale;
 
   // the image borders on the left and top in canvas coordinates
   var _image_left2xy = _center[0] - (_sliceWidthScaled / 2);
   var _image_top2xy = _center[1] - (_sliceHeightScaled / 2);
 
   // incorporate the padding offsets (but they have to be scaled)
-  _image_left2xy += _x * _normalizedScale;
-  _image_top2xy += _y * _normalizedScale;
+  _image_left2xy += _x * this._normalizedScale;
+  _image_top2xy += _y * this._normalizedScale;
 
   if(x>_image_left2xy && x < _image_left2xy + _sliceWidthScaled &&
     y>_image_top2xy && y < _image_top2xy + _sliceHeightScaled){
 
     var _xNorm = (x - _image_left2xy)/ _sliceWidthScaled;
     var _yNorm = (y - _image_top2xy)/ _sliceHeightScaled;
-  
+
     _x = _xNorm*_sliceWidth;
     _y = _yNorm*_sliceHeight;
     var _z = _currentSlice._xyBBox[4];
@@ -824,13 +877,13 @@ X.renderer2D.prototype.xy2ijk = function(x, y) {
 
     }
     else if (this._orientation == "Y") {
-    
+
       // invert cols
       _x = _sliceWidth - _x;
 
     }
     else if (this._orientation == "Z") {
-    
+
       // invert all
       _x = _sliceWidth - _x;
       _y = _sliceHeight - _y;
@@ -931,7 +984,7 @@ X.renderer2D.prototype.render_ = function(picking, invoked) {
     _currentSlice = _volume['indexZ'];
 
   }
-
+  
   //if slice do not exist yet, we have to set slice dimensions
   var _width2 = this._slices[parseInt(_currentSlice, 10)]._iWidth;
   var _height2 = this._slices[parseInt(_currentSlice, 10)]._iHeight;
@@ -960,9 +1013,9 @@ X.renderer2D.prototype.render_ = function(picking, invoked) {
 
   // transform the canvas according to the view matrix
   // .. this includes zoom
-  var _normalizedScale = Math.max(_view[14], 0.1);
+  this._normalizedScale = Math.max(_view[14], 0.1);
 
-  this._context.setTransform(_normalizedScale, 0, 0, _normalizedScale, 0, 0);
+  this._context.setTransform(this._normalizedScale, 0, 0, this._normalizedScale, 0, 0);
 
   // .. and pan
   // we need to flip y here
@@ -1148,7 +1201,7 @@ X.renderer2D.prototype.render_ = function(picking, invoked) {
       _index += 4; // increase by 4 units for r,g,b,a
 
     } while (_index < _pixelsLength);
-    
+
     // store the generated image data to the frame buffer context
     _imageFBContext.putImageData(_imageData, 0, 0);
     _labelFBContext.putImageData(_labelmapData, 0, 0);
@@ -1179,8 +1232,8 @@ X.renderer2D.prototype.render_ = function(picking, invoked) {
   this._context.globalAlpha = 1.0; // draw fully opaque}
 
   // move to the middle
-  this._context.translate(_width / 2 / _normalizedScale, _height / 2 /
-      _normalizedScale);
+  this._context.translate(_width / 2 /this._normalizedScale, _height / 2 /
+      this._normalizedScale);
 
   // Rotate the Sagittal viewer
   if(this._orientation == "X") {
@@ -1325,3 +1378,5 @@ goog.exportSymbol('X.renderer2D.prototype.render',
 goog.exportSymbol('X.renderer2D.prototype.destroy',
     X.renderer2D.prototype.destroy);
 goog.exportSymbol('X.renderer2D.prototype.onSliceNavigation', X.renderer2D.prototype.onSliceNavigation);
+
+goog.exportSymbol('X.renderer2D.prototype.afterRender', X.renderer2D.prototype.afterRender);
